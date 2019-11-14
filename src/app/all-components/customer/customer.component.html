@@ -1,0 +1,156 @@
+<!-- <nav>
+  <ol class="breadcrumb">
+	  <li class="breadcrumb-item">User</li>
+    <li class="breadcrumb-item active">Customer</li>
+  </ol>
+</nav> -->
+
+<div class="row">
+
+  <div class="col-lg-1 pb-3"></div>
+
+  <div class="col-lg-6">
+    <div class="row">
+      <div class="col-12 pt-0 pb-2" style="background-color:white">
+        <div class="row mt-2">
+          <div class="col-6 text-left">
+
+          </div>
+        </div>
+	  </div>
+
+			<div class="col-12 pt-0" style="width:100%">
+				<div class="alert alert-success alert-dismissible" *ngIf="showSuccessMessage">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong>Success!</strong> {{successMessage}}
+				</div>
+			</div>
+
+
+      <div class="col-12 mx-auto mt-1 text-left pt-2 pb-2 mx-2 rounded font-weight-bold ">Existing Customers</div>
+      <div class="col-12">
+        <table class="table">
+          <tr style="background-color:#000; color: #fff;font-family: 'Arial Narrow'">
+            <th>NAME</th>
+            <th></th>
+            <th></th>
+          </tr>
+          <tr *ngFor="let customer of customers; index as i">
+			      <td>
+							<img [src] = "customer.url" height=50 width=50 *ngIf="customer.url">
+			      </td>
+            <td>
+              <b>{{customer.customerName}}</b>
+			      </td>
+            <td>
+              <div class="radio">
+								<label><input type="radio" class="" name="userSelectedRadio"
+									            [checked]="customer.radioSelection" (click)="editIndex=i"></label>
+              </div>
+            </td>
+          </tr>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-lg-1 pb-1"></div>
+
+  <div class="col-lg-3" *ngIf="!showCustomerForm">
+
+    <div class="row">
+      <div class="col-lg-12 mx-auto mt-1 text-left pt-1 pb-2 mx-2 rounded font-weight-bold">Actions</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12 pt-2">
+			<button (click)="showCustomerAddForm($event)" class="btn btn-danger text-white btn-block">ADD CUSTOMER</button>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-lg-12 pt-2">
+			<span>
+				SELECT A CUSTOMER TO PERFORM THE ACTIONS BELOW:
+			</span>
+		</div>
+    </div>
+
+	<div class="row">
+    <div class="col-lg-12 pt-2">
+		<button (click)="edit(editIndex)" class="btn btn-secondary text-white btn-block"
+		         type="button" [disabled]="editIndex==null">EDIT CUSTOMER</button>
+	</div>
+    </div>
+
+	<div class="row">
+	<div class="col-lg-12 pt-2">
+		<button class="btn btn-outline-dark btn-block" type="button" [disabled]="editIndex==null"
+		        (click)="deleteCustomer(editIndex)" >DELETE CUSTOMER</button>
+	</div>
+    </div>
+  </div>
+
+<!-- Add Customer Form -->
+  <div class="col-lg-3" *ngIf="showCustomerForm">
+
+	  <div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="!editForm">Actions - Add Customer</div>
+    <div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="editForm">Actions - Edit Customer</div>
+		<form name="customer">
+			<div class="form-group">
+				<label for="customerName">CUSTOMER NAME:</label>
+				<input type="text" name="customerName" [(ngModel)]="customer.customerName"  placeholder="Full Name" name="customerName" class="form-control" id="customerName">
+			</div>
+			<div class="form-group">
+				<label for="tier1Name">TIER 1 NAME *</label>
+				<input  placeholder="tier1Name" name="tier1Name" [(ngModel)]="customer.tier1Name"
+				  name="tier1Name" class="form-control" id="tier1Name">
+			</div>
+			<div class="form-group">
+				<label for="tier2Name">TIER 2 NAME *</label>
+				<input  placeholder="tier2Name" name="tier2Name" [(ngModel)]="customer.tier2Name"
+				 name="tier2Name" class="form-control" id="tier2Name">
+			</div>
+			<div class="form-group">
+				<label for="tier3Name">TIER 3 NAME *</label>
+				<input  placeholder="tier3Name" name="tier3Name" [(ngModel)]="customer.tier3Name"
+				 name="tier3Name" class="form-control" id="tier3Name">
+			</div>
+			<div class="form-group">
+				<label for="tier4Name">TIER 4 NAME *</label>
+				<input  placeholder="tier4Name" name="tier4Name" [(ngModel)]="customer.tier4Name"
+				 name="tier4Name" class="form-control" id="tier4Name">
+			</div>
+			<div class="form-group">
+				<label for="tier5Name">TIER 5 NAME *</label>
+				<input  placeholder="tier5Name" name="tier5Name" [(ngModel)]="customer.tier5Name"
+				 name="tier5Name" class="form-control" id="tier5Name">
+			</div>
+			<div class="form-group">
+				<label for="tier6Name">TIER 6 NAME *</label>
+				<input type="text" placeholder="tier6Name" name="tier6Name" [(ngModel)]="customer.tier6Name"
+				 name="tier6Name" class="form-control" id="tier6Name">
+			</div>
+      <div class="form-group">
+				<label for="exampleInputFile"><b>Add a Customer logo* (svg format)</b></label>
+				<input #file type="file" class="form-control-file"name="logo" id="customerLogo"
+				        aria-describedby="fileHelp" (change)="preview(file.files)"/>
+				<img [src]="customer.url" height="150" *ngIf="customer.url">
+      </div>
+
+
+			<button class="btn btn-dark mr-3" (click)="cancelForm($event)" *ngIf="!editForm">CANCEL</button>
+			<button class="btn btn-danger" (click)="createCustomer($event)" *ngIf="!editForm">SAVE CUSTOMER</button>
+
+			<button class="btn btn-dark mr-3" (click)="cancelEditForm($event)" *ngIf="editForm">CANCEL</button>
+			<button class="btn btn-danger" (click)="updateCustomer($event)" *ngIf="editForm">SAVE CUSTOMER</button>
+
+		</form>
+</div>
+
+</div>
+
+
+
+
+
