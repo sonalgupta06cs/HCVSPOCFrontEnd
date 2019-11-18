@@ -34,11 +34,11 @@ export class CustomerService {
     return this.http.put<Customer>(this.customerUrl , existingCustomer, { responseType: 'json' });
   }
 
-  public getCustomerLogo(customerId): Observable<any> {
+  public getCustomerLogo(logoName): Observable<any> {
     let headers = new HttpHeaders();
     headers = headers.append('Content-Type', 'image/jpeg');
 
-    return this.http.get(this.customerUrl + '/logo/' + customerId, {
+    return this.http.get(this.customerUrl + '/logo/' + logoName, {
       headers: headers,
       responseType: 'arraybuffer'
     });

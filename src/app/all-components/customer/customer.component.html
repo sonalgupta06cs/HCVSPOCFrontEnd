@@ -96,44 +96,86 @@
 
 	  <div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="!editForm">Actions - Add Customer</div>
     <div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="editForm">Actions - Edit Customer</div>
-		<form name="customer">
-			<div class="form-group">
-				<label for="customerName">CUSTOMER NAME:</label>
-				<input type="text" name="customerName" [(ngModel)]="customer.customerName"  placeholder="Full Name" name="customerName" class="form-control" id="customerName">
+		<form name="customer" #custForm="ngForm">
+			<div class="form-group"> <!-- novalidate="novalidate" -->
+				<label for="customerName">CUSTOMER NAME *</label>
+				<input type="text" name="customerName" [(ngModel)]="customer.customerName"  placeholder="Full Name"
+							 name="customerName" class="form-control" id="customerName" #custName="ngModel"
+							 required="required" pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
+							 [ngClass]="{ 'is-invalid': custName.invalid && ( custName.dirty || custName.touched || 
+													                                      custForm.submitted )}"
+							 [ngClass]="{ 'is-valid': custName.valid && ( custName.dirty || custName.touched || 
+													                                      custForm.submitted )}"> 
+
+						<span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched
+						                                  || custForm.submitted)  && custName.errors?.required">
+							 Customer Name can't be blank.
+						</span>	 
+
+						<span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched 
+						                                 || custForm.submitted)  && custName.errors?.pattern">
+							 Customer Name can contain alphabets, digits, dot, hyphen or space only.
+						</span>	 
+
+						<span class="text-danger" *ngIf="custName.invalid && (custName.dirty || custName.touched 
+																					|| custForm.submitted) && custName.errors?.minlength">
+							 Customer name should be at least 3 characters long.
+						</span>
 			</div>
 			<div class="form-group">
 				<label for="tier1Name">TIER 1 NAME *</label>
 				<input  placeholder="tier1Name" name="tier1Name" [(ngModel)]="customer.tier1Name"
-				  name="tier1Name" class="form-control" id="tier1Name">
+				        name="tier1Name" class="form-control" id="tier1Name" #tier1Name="ngModel"
+							 required="required" pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
+							 [ngClass]="{ 'is-invalid': tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched || 
+													                                      custForm.submitted )}"
+							 [ngClass]="{ 'is-valid': tier1Name.valid && ( tier1Name.dirty || tier1Name.touched || 
+													                                      custForm.submitted )}"> 
+
+						<span class="text-danger" *ngIf="tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched
+						                                  || custForm.submitted)  && tier1Name.errors?.required">
+							 Tier1 Name can't be blank.
+						</span>	 
+
+						<span class="text-danger" *ngIf="tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched 
+						                                 || custForm.submitted)  && tier1Name.errors?.pattern">
+							 Tier1 Name can contain alphabets, digits, dot, hyphen or space only.
+						</span>	 
+
+						<span class="text-danger" *ngIf="tier1Name.invalid && (tier1Name.dirty || tier1Name.touched 
+																					|| custForm.submitted) && tier1Name.errors?.minlength">
+							 Tier1 name should be at least 3 characters long.
+						</span>
+
 			</div>
 			<div class="form-group">
-				<label for="tier2Name">TIER 2 NAME *</label>
+				<label for="tier2Name">TIER 2 NAME</label>
 				<input  placeholder="tier2Name" name="tier2Name" [(ngModel)]="customer.tier2Name"
-				 name="tier2Name" class="form-control" id="tier2Name">
+				        name="tier2Name" class="form-control" id="tier2Name">
 			</div>
 			<div class="form-group">
-				<label for="tier3Name">TIER 3 NAME *</label>
+				<label for="tier3Name">TIER 3 NAME</label>
 				<input  placeholder="tier3Name" name="tier3Name" [(ngModel)]="customer.tier3Name"
-				 name="tier3Name" class="form-control" id="tier3Name">
+				        name="tier3Name" class="form-control" id="tier3Name">
 			</div>
 			<div class="form-group">
-				<label for="tier4Name">TIER 4 NAME *</label>
+				<label for="tier4Name">TIER 4 NAME</label>
 				<input  placeholder="tier4Name" name="tier4Name" [(ngModel)]="customer.tier4Name"
-				 name="tier4Name" class="form-control" id="tier4Name">
+				        name="tier4Name" class="form-control" id="tier4Name">
 			</div>
 			<div class="form-group">
-				<label for="tier5Name">TIER 5 NAME *</label>
+				<label for="tier5Name">TIER 5 NAME</label>
 				<input  placeholder="tier5Name" name="tier5Name" [(ngModel)]="customer.tier5Name"
-				 name="tier5Name" class="form-control" id="tier5Name">
+				        name="tier5Name" class="form-control" id="tier5Name">
 			</div>
 			<div class="form-group">
-				<label for="tier6Name">TIER 6 NAME *</label>
+				<label for="tier6Name">TIER 6 NAME</label>
 				<input type="text" placeholder="tier6Name" name="tier6Name" [(ngModel)]="customer.tier6Name"
-				 name="tier6Name" class="form-control" id="tier6Name">
+				       name="tier6Name" class="form-control" id="tier6Name">
 			</div>
       <div class="form-group">
-				<label for="exampleInputFile"><b>Add a Customer logo* (svg format)</b></label>
-				<input #file type="file" class="form-control-file"name="logo" id="customerLogo"
+				<label for="exampleInputFile"><b>Add a Customer logo *</b></label>
+				<input #file type="file" class="form-control-file" name="logo" id="customerLogo"
 				        aria-describedby="fileHelp" (change)="preview(file.files)"/>
 				<img [src]="customer.url" height="150" *ngIf="customer.url">
       </div>
