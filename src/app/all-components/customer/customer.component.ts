@@ -124,8 +124,6 @@ export class CustomerComponent implements OnInit {
         // refresh the list of customers
         this.getCustomers();
 
-
-
       }, (error) => {
         console.log(error);
       });
