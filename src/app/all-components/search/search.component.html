@@ -1,0 +1,92 @@
+<div class="row">
+
+  <div class="col-lg-3 pb-3"></div>
+
+  <div class="col-lg-6 pb-3">
+
+    <div class="row">
+      <div class="col-12 pt-0 pb-2" style="background-color:white">
+        <div class="row mt-2">
+          <div class="col-6 text-left">
+
+          </div>
+        </div>
+    </div>
+    </div>
+
+     <div class="row">
+          <div class="col-lg-12 mx-auto mt-1 text-center pt-2 pb-2 mx-2 rounded font-weight-bold">SEARCH</div>
+     </div>     
+
+     <div class="row">
+          <div class="col-lg-4 pt-4">
+            <label for="drpSearchBy" class="col-form-label font-weight-bold">Search by:</label>
+          </div>
+          
+          <div class="col-lg-6 pt-4">
+            <select class="form-control" id="drpSearchBy" name="SearchBy" [(ngModel)]="searchBy">
+              <option value="customerName">Customer Name</option>
+              <option value="tier1Name">Tier1 Name</option>
+              <option value="tier2Name">Tier2 Name</option>
+            </select>
+          </div>
+     </div> 
+
+
+     <div class="row">
+          <div class="col-lg-4 pt-4">
+              <label for="textSearchText" class="col-form-label font-weight-bold">Search:</label>
+          </div>
+      
+          <div class="col-lg-6 pt-4">
+            <div class="input-group">
+              <input type="text" class="form-control" id="txtSearchText" name="SearchText" [(ngModel)]="searchText">
+              <div class="input-group-append" (click)="onSearchClick()">
+                <span class="input-group-text"><i class="fa fa-search"></i></span>
+              </div>
+            </div>
+          </div>
+     </div>
+      
+
+     <div class="row">
+        <div class="col-lg-12 pt-4">
+            <table class="table table-striped">
+                  <thead>
+                  <tr>
+                      <th scope="col">ID</th>
+                      <th scope="col">NAME</th>
+                      <th scope="col">TIER1 NAME</th>
+                      <th scope="col">TIER2 NAME</th>
+                      <th scope="col">LOGO</th>
+                 </tr>
+                  </thead>
+               <tbody>
+                  <tr *ngFor="let searchCustomer of customers; index as i">
+                       <td>
+                          {{searchCustomer.id}}
+                      </td>
+                      <td>
+                          {{searchCustomer.customerName}}
+                      </td>
+                      <td>
+                          {{searchCustomer.tier1Name}}
+                      </td>
+                      <td>
+                          {{searchCustomer.tier2Name}}
+                      </td>
+                      <td>
+                      <div>
+                          <img [src]="searchCustomer.url" height="50" width="50">
+                      </div>
+                      </td>
+                  </tr>
+               </tbody>
+           </table>
+              </div>
+      </div>
+    
+  </div>
+
+  <div class="col-lg-3 pb-3"></div>
+</div>
