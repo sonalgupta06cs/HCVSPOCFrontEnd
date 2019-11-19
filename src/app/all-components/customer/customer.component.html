@@ -101,7 +101,7 @@
 				<label for="customerName">CUSTOMER NAME *</label>
 				<input type="text" name="customerName" [(ngModel)]="customer.customerName"  placeholder="Full Name"
 							 name="customerName" class="form-control" id="customerName" #custName="ngModel"
-							 required="required" pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
+							 required pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
 							 [ngClass]="{ 'is-invalid': custName.invalid && ( custName.dirty || custName.touched || 
 													                                      custForm.submitted )}"
 							 [ngClass]="{ 'is-valid': custName.valid && ( custName.dirty || custName.touched || 
@@ -126,7 +126,7 @@
 				<label for="tier1Name">TIER 1 NAME *</label>
 				<input  placeholder="tier1Name" name="tier1Name" [(ngModel)]="customer.tier1Name"
 				        name="tier1Name" class="form-control" id="tier1Name" #tier1Name="ngModel"
-							 required="required" pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
+							 required pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
 							 [ngClass]="{ 'is-invalid': tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched || 
 													                                      custForm.submitted )}"
 							 [ngClass]="{ 'is-valid': tier1Name.valid && ( tier1Name.dirty || tier1Name.touched || 
@@ -175,8 +175,15 @@
 			</div>
       <div class="form-group">
 				<label for="exampleInputFile"><b>Add a Customer logo *</b></label>
-				<input #file type="file" class="form-control-file" name="logo" id="customerLogo"
-				        aria-describedby="fileHelp" (change)="preview(file.files)"/>
+				<input type="file" #file class="form-control-file" name="logo" id="customerLogo"
+								aria-describedby="fileHelp" (change)="preview(file.files)" #multiFile="ngModel"
+								[(ngModel)]="customer.url" required/>
+
+						<span class="text-danger" *ngIf="multiFile.invalid && ( multiFile.dirty || multiFile.touched
+						                                  || custForm.submitted)  && multiFile.errors?.required">
+							 Logo can't be blank.
+						</span>	
+																																	
 				<img [src]="customer.url" height="150" *ngIf="customer.url">
       </div>
 

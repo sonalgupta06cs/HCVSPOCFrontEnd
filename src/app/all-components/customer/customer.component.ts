@@ -2,6 +2,7 @@ import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import { Customer } from 'src/app/models/customer';
 import { CustomerService } from 'src/app/services/customer.service';
 import { DomSanitizer } from '@angular/platform-browser';
+import { NgForm } from '@angular/forms';
 
 @Component({
   selector: 'app-customer',
@@ -21,6 +22,8 @@ export class CustomerComponent implements OnInit {
 
   public imagePath;
   public message: string;
+
+  @ViewChild('custForm') customerForm: NgForm
 
   constructor(private customerService: CustomerService, private _sanitizer: DomSanitizer) { }
 
@@ -88,10 +91,11 @@ export class CustomerComponent implements OnInit {
   /* Method to create the new customer */
   createCustomer(event) {
     debugger;
+    if(this.customerForm.valid) {
     const customerFormData: FormData = this.createCustomerFormData();
 
      this.customerService.createCustomer(customerFormData).subscribe((response) => {
-        this.successMessage = "Customer has been added successfully.";
+        this.successMessage = 'Customer has been added successfully.';
         this.showCustomerForm = false;
         this.showSuccessMessage = true;
         this.hideMessage();
@@ -127,6 +131,7 @@ export class CustomerComponent implements OnInit {
       }, (error) => {
         console.log(error);
       });
+     }
     }
 
     /* Method to edit the customer */
@@ -147,11 +152,14 @@ export class CustomerComponent implements OnInit {
     }
 
     updateCustomer() {
+
+      if(this.customerForm.valid) {
+
       const customerFormData: FormData = this.createCustomerFormData();
       customerFormData.append('id', '' + this.customer.id);
 
       this.customerService.updateCustomer(customerFormData).subscribe( (response: Customer) => {
-        this.successMessage = "Changes have been saved.";
+        this.successMessage = 'Changes have been saved.';
         this.showSuccessMessage = true;
         this.hideMessage();
 
@@ -174,6 +182,7 @@ export class CustomerComponent implements OnInit {
       }, (error) => {
         console.log(error);
       });
+     }
     }
 
     deleteCustomer(index) {
