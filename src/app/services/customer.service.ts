@@ -44,4 +44,8 @@ export class CustomerService {
     });
   }
 
+  public searchByProperty(searchBy: string, searchText: string): Observable<Customer[]> {
+      return this.http.get<Customer[]>(this.customerUrl + '/search/' + searchBy + '/' + searchText);
+  }
+
 }

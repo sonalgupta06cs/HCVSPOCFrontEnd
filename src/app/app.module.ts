@@ -9,6 +9,7 @@ import { UserComponent } from './all-components/user/user.component';
 import { CustomerComponent } from './all-components/customer/customer.component';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
+import { SearchComponent } from './all-components/search/search.component';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import { FormsModule } from '@angular/forms';
     MenuComponent,
     FooterComponent,
     UserComponent,
-    CustomerComponent
+    CustomerComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,
