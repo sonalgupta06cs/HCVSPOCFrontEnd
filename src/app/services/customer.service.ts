@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpResponse } from '@angular/common/http';
 import { Customer } from '../models/customer';
 import { Observable, of } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 @Injectable({
@@ -11,7 +12,7 @@ export class CustomerService {
 
   constructor(private http: HttpClient) {}
 
-  private customerUrl = 'http://localhost:8889/api/customers';
+  private customerUrl = environment.baseUrl + 'customers';
 
 
   public getCustomers(): Observable<any[]> {
@@ -22,8 +23,8 @@ export class CustomerService {
     return this.http.get<Customer>(this.customerUrl + '?id=' + customerId, { responseType: 'json' });
   }
 
-  public deleteCustomer(customerId: number) {
-    return this.http.delete(this.customerUrl + '/' + customerId);
+  public deleteCustomers(customerIds: any[]) {
+    return this.http.post(this.customerUrl, customerIds, { responseType: 'text' });
   }
 
   public createCustomer(customerFormData: FormData): Observable<any> {
@@ -48,4 +49,11 @@ export class CustomerService {
       return this.http.get<Customer[]>(this.customerUrl + '/search/' + searchBy + '/' + searchText);
   }
 
+  public getCustomerNames(keyword): Observable<Customer> {
+    return this.http.get<Customer>(this.customerUrl + '?keyword=' + keyword);
+  }
+
+  public getCustomerById(id): Observable<Customer> {
+    return this.http.get<Customer>(this.customerUrl + '/' + id);
+  }
 }

@@ -1,10 +1,3 @@
-<!-- <nav>
-  <ol class="breadcrumb">
-	  <li class="breadcrumb-item">User</li>
-    <li class="breadcrumb-item active">Customer</li>
-  </ol>
-</nav> -->
-
 <div class="row">
 
   <div class="col-lg-1 pb-3"></div>
@@ -27,6 +20,8 @@
 			</div>
 
 
+
+
       <div class="col-12 mx-auto mt-1 text-left pt-2 pb-2 mx-2 rounded font-weight-bold ">Existing Customers</div>
       <div class="col-12">
         <table class="table">
@@ -44,15 +39,19 @@
 			      </td>
             <td>
               <div class="radio">
-								<label><input type="radio" class="" name="userSelectedRadio"
-									            [checked]="customer.radioSelection" (click)="editIndex=i"></label>
+								<label><!-- <input type="radio" class="" name="userSelectedRadio"
+									          [checked]="customer.radioSelection" (click)="editIndex=i"> -->
+								<input type="checkbox" data-md-icheck  #checkdelet id="{{customer.id}}"
+								       name="deletecheck" value="{{customer.id}}" (change)="selectID(i, $event)">
+								</label>
               </div>
             </td>
           </tr>
         </table>
-      </div>
+			</div>
+
     </div>
-  </div>
+	</div>
 
   <div class="col-lg-1 pb-1"></div>
 
@@ -68,6 +67,7 @@
 						 <i class="fa fa-plus fa-lg" aria-hidden="true"></i>
 			</button>
 		</div>
+
 	</div>
 
 	<div class="row">
@@ -82,13 +82,13 @@
     <div class="col-lg-12 pt-2">
 		<button (click)="edit(editIndex)" class="btn btn-secondary text-white btn-block"
 		         type="button" [disabled]="editIndex==null">EDIT CUSTOMER</button>
-	</div>
-    </div>
+	  </div>
+  </div>
 
 	<div class="row">
 	<div class="col-lg-12 pt-2">
 		<button class="btn btn-outline-dark btn-block" type="button" [disabled]="editIndex==null"
-		        (click)="deleteCustomer(editIndex)" >DELETE CUSTOMER</button>
+		        (click)="deleteCustomer()" >DELETE CUSTOMER</button>
 	</div>
     </div>
   </div>
@@ -96,60 +96,114 @@
 <!-- Add Customer Form -->
   <div class="col-lg-3" *ngIf="showCustomerForm">
 
-	  <div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="!editForm">Actions - Add Customer</div>
+	<div class="row">
+		<div class="col-lg-12 pt-2" style="width: 100%">
+				<div class="alert alert-danger alert-dismissible" *ngIf="errorBlock">
+					<button type="button" class="close" data-dismiss="alert">&times;</button>
+					<strong> {{errorText}} </strong>
+				</div>
+			</div>
+	</div>
+
+		<div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="!editForm">Actions - Add Customer</div>
+
     <div class="col-12 p-0 my-2 text-left rounded font-weight-bold" *ngIf="editForm">Actions - Edit Customer</div>
-		<form name="customer" #custForm="ngForm">
+    <!-- edit form = {{editForm}} -->
+		<form name="customer" #custForm="ngForm" novalidate autocomplete="off">
 			<div class="form-group"> <!-- novalidate="novalidate" -->
 				<label for="customerName">CUSTOMER NAME *</label>
-				<input type="text" name="customerName" [(ngModel)]="customer.customerName"  placeholder="Full Name"
+        <div class="autocomplete-box" *ngIf="!editForm">
+				  <input type="text" name="customerName" (input)="autocomplete(customer.customerName)" [(ngModel)]="customer.customerName"  placeholder="Full Name"
 							 name="customerName" class="form-control" id="customerName" #custName="ngModel"
-							 required pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
-							 [ngClass]="{ 'is-invalid': custName.invalid && ( custName.dirty || custName.touched || 
+							 required pattern="^[A-Za-z0-9 /._-]*$" minlength="3" maxlength="30"
+							 [ngClass]="{ 'is-invalid': custName.invalid && ( custName.dirty || custName.touched ||
 													                                      custForm.submitted )}"
-							 [ngClass]="{ 'is-valid': custName.valid && ( custName.dirty || custName.touched || 
-													                                      custForm.submitted )}"> 
-
-						<span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched
+							 [ngClass]="{ 'is-valid': custName.valid && ( custName.dirty || custName.touched ||
+													                                      custForm.submitted )}">
+            <div class="autocomplete" *ngIf="showAutocomplete">
+              <div *ngFor="let customer of customerNames" (click)="getCustomer(customer)">{{customer.customerName}}</div>
+            </div>
+            <span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched
 						                                  || custForm.submitted)  && custName.errors?.required">
 							 Customer Name can't be blank.
-						</span>	 
+						</span>
 
-						<span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched 
+						<span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched
 						                                 || custForm.submitted)  && custName.errors?.pattern">
 							 Customer Name can contain alphabets, digits, dot, hyphen or space only.
-						</span>	 
+						</span>
 
-						<span class="text-danger" *ngIf="custName.invalid && (custName.dirty || custName.touched 
+						<span class="text-danger" *ngIf="custName.invalid && (custName.dirty || custName.touched
 																					|| custForm.submitted) && custName.errors?.minlength">
 							 Customer name should be at least 3 characters long.
 						</span>
+          </div>
+          <div *ngIf="editForm">
+            <input type="text" name="customerName" [(ngModel)]="customer.customerName"  placeholder="Full Name hai"
+							 name="customerName" class="form-control" id="customerName" #custName="ngModel" [disabled]="isDisableFields"
+							 required pattern="^[A-Za-z0-9 /._-]*$" minlength="3" maxlength="30"
+							 [ngClass]="{ 'is-invalid': custName.invalid && ( custName.dirty || custName.touched ||
+													                                      custForm.submitted )}"
+							 [ngClass]="{ 'is-valid': custName.valid && ( custName.dirty || custName.touched ||
+													                                      custForm.submitted )}">
+
+            <span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched
+						                                  || custForm.submitted)  && custName.errors?.required">
+							 Customer Name can't be blank.
+						</span>
+
+						<span class="text-danger" *ngIf="custName.invalid && ( custName.dirty || custName.touched
+						                                 || custForm.submitted)  && custName.errors?.pattern">
+							 Customer Name can contain alphabets, digits, dot, hyphen or space only.
+						</span>
+
+						<span class="text-danger" *ngIf="custName.invalid && (custName.dirty || custName.touched
+																					|| custForm.submitted) && custName.errors?.minlength">
+							 Customer name should be at least 3 characters long.
+						</span>
+          </div>
+
 			</div>
 			<div class="form-group">
 				<label for="tier1Name">TIER 1 NAME *</label>
 				<input  placeholder="tier1Name" name="tier1Name" [(ngModel)]="customer.tier1Name"
-				        name="tier1Name" class="form-control" id="tier1Name" #tier1Name="ngModel"
-							 required pattern="^[A-Za-z0-9 /.-]*$" minlength="3" maxlength="30"
-							 [ngClass]="{ 'is-invalid': tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched || 
+				        class="form-control" id="tier1Name" #tier1Name="ngModel"
+							 required pattern="^[A-Za-z0-9 /._-]*$" minlength="3" maxlength="30"
+							 [ngClass]="{ 'is-invalid': tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched ||
 													                                      custForm.submitted )}"
-							 [ngClass]="{ 'is-valid': tier1Name.valid && ( tier1Name.dirty || tier1Name.touched || 
-													                                      custForm.submitted )}"> 
+							 [ngClass]="{ 'is-valid': tier1Name.valid && ( tier1Name.dirty || tier1Name.touched ||
+													                                      custForm.submitted )}">
 
 						<span class="text-danger" *ngIf="tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched
 						                                  || custForm.submitted)  && tier1Name.errors?.required">
 							 Tier1 Name can't be blank.
-						</span>	 
+						</span>
 
-						<span class="text-danger" *ngIf="tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched 
+						<span class="text-danger" *ngIf="tier1Name.invalid && ( tier1Name.dirty || tier1Name.touched
 						                                 || custForm.submitted)  && tier1Name.errors?.pattern">
 							 Tier1 Name can contain alphabets, digits, dot, hyphen or space only.
-						</span>	 
+						</span>
 
-						<span class="text-danger" *ngIf="tier1Name.invalid && (tier1Name.dirty || tier1Name.touched 
+						<span class="text-danger" *ngIf="tier1Name.invalid && (tier1Name.dirty || tier1Name.touched
 																					|| custForm.submitted) && tier1Name.errors?.minlength">
 							 Tier1 name should be at least 3 characters long.
 						</span>
 
 			</div>
+			<div class="form-group">
+			<div class="dropdown">
+					<label for="mappedUser" class="mr-4">Mapped User:</label>
+					<select class="custom-select" name="mappedUser" [(ngModel)]="customer.userId"
+					        required="true" #mappedUser="ngModel" [disabled]="isDisableFields">
+						<option value="" disabled>Select Associated User</option>
+						<option *ngFor="let user of userNames" [value]="user.id">{{user.fullName}}</option>
+					</select>
+					<span class="text-danger" *ngIf="mappedUser.invalid && ( mappedUser.dirty || mappedUser.touched
+						                                  || custForm.submitted)  && mappedUser.errors?.required">
+							 Associated User can't be blank.
+					</span>
+			</div>
+		</div>
 			<div class="form-group">
 				<label for="tier2Name">TIER 2 NAME</label>
 				<input  placeholder="tier2Name" name="tier2Name" [(ngModel)]="customer.tier2Name"
@@ -175,26 +229,47 @@
 				<input type="text" placeholder="tier6Name" name="tier6Name" [(ngModel)]="customer.tier6Name"
 				       name="tier6Name" class="form-control" id="tier6Name">
 			</div>
+			<div class="form-group">
+				<label for="postalCode">Postal Code</label>
+				<input  placeholder="postalCode" name="postalCode" [(ngModel)]="customer.postalCode"
+								name="postalCode" class="form-control" id="postalCode" required
+								pattern="^(\d{6}(-\d{4})?|[A-Z]\d[A-Z] *\d[A-Z]\d)$" #postalCode="ngModel"
+							 [ngClass]="{ 'is-invalid': postalCode.invalid && ( postalCode.dirty || postalCode.touched ||
+													                                      custForm.submitted )}"
+							 [ngClass]="{ 'is-valid': postalCode.valid && ( postalCode.dirty || postalCode.touched ||
+																																custForm.submitted )}">
+
+						<span class="text-danger" *ngIf="postalCode.invalid && ( postalCode.dirty || postalCode.touched
+						                                  || custForm.submitted)  && postalCode.errors?.required">
+							 PostalCode can't be blank.
+						</span>
+
+						<span class="text-danger" *ngIf="postalCode.invalid && ( postalCode.dirty || postalCode.touched
+						                                 || custForm.submitted)  && postalCode.errors?.pattern">
+							 PostalCode does not match the correct pattern.
+						</span>
+			</div>
       <div class="form-group">
 				<label for="exampleInputFile"><b>Add a Customer logo *</b></label>
 				<input type="file" #file class="form-control-file" name="logo" id="customerLogo"
-								aria-describedby="fileHelp" (change)="preview(file.files)" #multiFile="ngModel"
-								[(ngModel)]="customer.url" required/>
+								aria-describedby="fileHelp" (change)="preview(file.files)" required="true" />
 
-						<span class="text-danger" *ngIf="multiFile.invalid && ( multiFile.dirty || multiFile.touched
+						<!-- <span class="text-danger" *ngIf="multiFile.invalid && ( multiFile.dirty || multiFile.touched
 						                                  || custForm.submitted)  && multiFile.errors?.required">
 							 Logo can't be blank.
-						</span>	
-																																	
+						</span> -->
+
 				<img [src]="customer.url" height="150" *ngIf="customer.url">
-      </div>
+			</div>
+
 
 
 			<button class="btn btn-dark mr-3" (click)="cancelForm($event)" *ngIf="!editForm">CANCEL</button>
-			<button class="btn btn-danger" (click)="createCustomer($event)" *ngIf="!editForm">SAVE CUSTOMER</button>
+			<button class="btn btn-danger" (click)="createCustomer($event)" *ngIf="!editForm && !showActiveBtn">SAVE CUSTOMER</button>
+      <button class="btn btn-primary" (click)="activateCustomer($event)" *ngIf="!editForm && showActiveBtn">Activate</button>
 
 			<button class="btn btn-dark mr-3" (click)="cancelEditForm($event)" *ngIf="editForm">CANCEL</button>
-			<button class="btn btn-danger" (click)="updateCustomer($event)" *ngIf="editForm">SAVE CUSTOMER</button>
+			<button class="btn btn-danger" (click)="updateCustomer($event)" *ngIf="editForm">UPDATE CUSTOMER</button>
 
 		</form>
 </div>

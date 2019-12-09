@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { User } from '../models/user';
 import { Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 
 
@@ -18,12 +19,17 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  // private userUrl = 'http://localhost:8080/user-portal/user';
-  private userUrl = 'http://localhost:8889/api/user';
+  private userUrl = environment.baseUrl + 'users';
 
-  public getUsers() {
-    return this.http.get<User[]>(this.userUrl);
+  public getUsers(): Observable<any[]> {
+    return this.http.get<User[]>(this.userUrl + '/all');
   }
+
+  public createUser(newUser: User): Observable<User> {
+    return this.http.post<User>(this.userUrl + '/create' , newUser, { responseType: 'json' });
+  }
+
+
 
   getUserByUserID(userId: number): Observable<User> {
     return this.http.get<User>(this.userUrl + '/getUserByUserId/' + userId, { responseType: 'json' });
@@ -33,12 +39,12 @@ export class UserService {
     return this.http.delete<string>(this.userUrl + '?userId/' + existingUser.id);
   }
 
-  public createUser(newUser: User): Observable<User> {
-    return this.http.post<User>(this.userUrl , newUser, { responseType: 'json' });
-  }
-
    public updateUser(existingUser: User): Observable<User> {
     return this.http.put<User>(this.userUrl , existingUser, { responseType: 'json' });
+  }
+
+  public getUsersNames(): Observable<any[]> {
+    return this.http.get<User[]>(this.userUrl + '/usersNames');
   }
 
 }

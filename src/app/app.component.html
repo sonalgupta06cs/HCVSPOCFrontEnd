@@ -1,35 +1,31 @@
 <app-menu></app-menu>
 
 
-<div class="container">
-   <!-- <div class="navbar navbar-expand-sm bg-dark navbar-dark">
-	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#mynav">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="mynav">
-
-        <ul class="navbar-nav mr-auto">
-            <li class="nav-item" >
-                <a class="nav-link" href="#" routerLink="user" >User Management</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link"  href="#" routerLink="customer">Customer Management</a>
-            </li>
-        </ul>
-	</div>
-
-  </div> -->
-</div>
+<div class="container"></div>
 <div class="row">
-  <div class="col-sm-12 offset-sm-1 mt-2">
-    <a  href="#" routerLink="user" class="p-1">User Management</a>
-    <a  href="#" routerLink="customer" class="p-1">Customer Management</a>
-    <a  href="#" routerLink="search" class="p-1"> Search</a>
+  <div class="col-lg-5 offset-sm-1 mt-2">
+    <a href="#" routerLink="user" class="p-1" *ngIf="loginService.isUserLoggedIn()">User Management</a>
+    <a href="#" routerLink="customer" class="p-1" *ngIf="loginService.isUserLoggedIn()">Customer Management</a>
+    <!-- <a href="#" routerLink="search" *ngIf="loginService.isUserLoggedIn()" class="p-1"> Search</a> -->
   </div>
+
+  <div class="col-lg-3 offset-sm-1 mt-2">
+    <a class="p-1" *ngIf="loginService.currentUserName != null">
+      Welcome, {{loginService.currentUserName}}
+    </a>
+    <a href="#" class="p-1" (click)="loginService.logOut()" *ngIf="loginService.isUserLoggedIn()">
+      Logout
+    </a>
+    <!-- <a href="#" class="p-1 text-uppercase font-weight-bold" *ngIf="loginService.isUserLoggedIn()"
+      routerLink="login">
+      Login
+    </a> -->
+  </div>
+
 </div>
 
 <div class="container-fluid">
-	<router-outlet></router-outlet>
+  <router-outlet></router-outlet>
 </div>
 
 <!-- <app-footer></app-footer> -->

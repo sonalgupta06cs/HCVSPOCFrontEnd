@@ -7,9 +7,12 @@ import { MenuComponent } from './menu/menu.component';
 import { FooterComponent } from './footer/footer.component';
 import { UserComponent } from './all-components/user/user.component';
 import { CustomerComponent } from './all-components/customer/customer.component';
-import { HttpClientModule } from '@angular/common/http';
+import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { SearchComponent } from './all-components/search/search.component';
+import { LoginComponent } from './all-components/login/login.component';
+import { BasicAuthHttpInterceptorService } from './services/interceptors/auth/basic-auth-interceptor.service';
+import { ErrorhandlerServiceInterceptor } from './services/interceptors/error-handler/errorhandler.service';
 
 
 @NgModule({
@@ -19,7 +22,8 @@ import { SearchComponent } from './all-components/search/search.component';
     FooterComponent,
     UserComponent,
     CustomerComponent,
-    SearchComponent
+    SearchComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +31,18 @@ import { SearchComponent } from './all-components/search/search.component';
     HttpClientModule,
     FormsModule
   ],
-  providers: [],
+  providers:  [
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: BasicAuthHttpInterceptorService,
+      multi: true
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorhandlerServiceInterceptor,
+      multi: true
+    }
+    ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
